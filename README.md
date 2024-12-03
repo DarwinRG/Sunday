@@ -1,10 +1,9 @@
 ![Logo](logo.jpg)
 
-&nbsp;
 
 # 🌞 Sunday
 
-Sunday is a Discord AI Chatbot that leverages the power of Google's Gemini-Pro API to interact with users in both text and image formats. It processes messages and images sent to it, generating creative and engaging responses.
+Sunday is an innovative AI-driven bot designed to enhance user interactions on Discord. Leveraging Google's generative AI, it provides intelligent text responses and processes images to create engaging conversations. With features like user message history management and customizable settings, Sunday ensures a personalized experience. Additionally, it supports various input formats, including PDFs, TXT files, and YouTube URLs, making it a versatile tool for diverse user needs.
 
 ## ✨ Features
 
