@@ -453,10 +453,14 @@ async def process_pdf(pdf_data, prompt):
 
 
 # Slash Commands
-@bot.tree.command(name="ping", description="Responds with Pong!")
-@app_commands.describe(things="Pong!")
-async def say(interaction: discord.Interaction, things: str):
-    await interaction.response.send_message(f"Pong! {things}")
+@bot.tree.command(name='ping', description='Display the latency of the bot!')
+async def ping(interaction: discord.Interaction):
+    await interaction.response.send_message(f'Pong! ||{round(bot.latency * 1000)}ms||')
+    
+@bot.tree.command(name='say', description='I\'ll repeat what you want to say!')
+@app_commands.describe(what_to_say='The message you want me to say!')
+async def say(interaction: discord.Interaction, what_to_say: str):
+    await interaction.response.send_message(f'{what_to_say} - **{interaction.user.display_name}**')
 
 
 # ---------------------------------------------Run Bot-------------------------------------------------
