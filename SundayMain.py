@@ -2,6 +2,7 @@ import discord
 import google.generativeai as genai
 from discord.ext import commands
 from pathlib import Path
+from discord.ext.commands import Bot, Context
 import aiohttp
 import re
 import os
@@ -81,11 +82,13 @@ async def on_message(message):
     # Ignore DMs
     if isinstance(message.channel, discord.DMChannel):
         return
+
+    # Ignore messages sent by other bots
+    if message.author.bot:
+        return
+    
     # Check if the message is in the bot channel or the bot is mentioned
-    if (
-        message.channel.id in BOT_CHANNEL_ID
-        or bot.user.mentioned_in(message)
-    ):
+    if message.channel.id in BOT_CHANNEL_ID or bot.user.mentioned_in(message):
         asyncio.create_task(process_message(message))
 
 
@@ -96,14 +99,11 @@ async def process_message(message):
         return
 
     # Ignore messages that start with a dot
-    if message.content.startswith('.'):
+    if message.content.startswith("."):
         return
-        
+
     # Check if the bot is mentioned or the message is in the bot channel
-    if (
-        bot.user.mentioned_in(message)
-        or message.channel.id in BOT_CHANNEL_ID
-    ):
+    if bot.user.mentioned_in(message) or message.channel.id in BOT_CHANNEL_ID:
         # Start Typing to seem like something happened
         cleaned_text = clean_discord_message(message.content)
         async with message.channel.typing():
@@ -449,6 +449,12 @@ async def process_pdf(pdf_data, prompt):
     pdf_document.close()
     print(text)
     return await generate_response_with_text(prompt + ": " + text)
+
+
+# Bot Commands
+@bot.command(name="ping")
+async def ping(ctx: Context):
+    await ctx.send("Pong!")
 
 
 # ---------------------------------------------Run Bot-------------------------------------------------
