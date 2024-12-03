@@ -27,7 +27,6 @@ SUMMERIZE_PROMPT = "Give me 5 bullets about"
 
 message_history = {}
 
-
 # show_debugs = False
 
 # ---------------------------------------------AI Configuration-------------------------------------------------
@@ -62,7 +61,8 @@ gemini_model = genai.GenerativeModel(
 # Initialize Discord bot
 defaultIntents = discord.Intents.default()
 defaultIntents.message_content = True
-bot = commands.Bot(command_prefix="!", intents=defaultIntents)
+bot = commands.Bot(command_prefix="/", intents=defaultIntents)
+tree = bot.tree
 
 
 @bot.event
@@ -75,6 +75,7 @@ async def on_ready():
             type=discord.ActivityType.listening, name="your problems"
         )
     )
+    await tree.sync()
 
 
 @bot.event
@@ -86,7 +87,7 @@ async def on_message(message):
     # Ignore messages sent by other bots
     if message.author.bot:
         return
-    
+
     # Check if the message is in the bot channel or the bot is mentioned
     if message.channel.id in BOT_CHANNEL_ID or bot.user.mentioned_in(message):
         asyncio.create_task(process_message(message))
@@ -451,10 +452,10 @@ async def process_pdf(pdf_data, prompt):
     return await generate_response_with_text(prompt + ": " + text)
 
 
-# Bot Commands
-@bot.command(name="ping")
-async def ping(ctx: Context):
-    await ctx.send("Pong!")
+# Slash Commands
+@tree.command(name="ping", description="Responds with Pong!")
+async def ping(interaction: discord.Interaction):
+    await interaction.response.send_message("Pong!")
 
 
 # ---------------------------------------------Run Bot-------------------------------------------------
