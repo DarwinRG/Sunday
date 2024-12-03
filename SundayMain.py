@@ -1,8 +1,8 @@
 import discord
 import google.generativeai as genai
 from discord.ext import commands
+from discord import app_commands
 from pathlib import Path
-from discord.ext.commands import Bot, Context
 import aiohttp
 import re
 import os
@@ -61,7 +61,7 @@ gemini_model = genai.GenerativeModel(
 # Initialize Discord bot
 defaultIntents = discord.Intents.default()
 defaultIntents.message_content = True
-bot = commands.Bot(command_prefix="/", intents=defaultIntents)
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 tree = bot.tree
 
 
@@ -453,7 +453,7 @@ async def process_pdf(pdf_data, prompt):
 
 
 # Slash Commands
-@tree.command(name="ping", description="Responds with Pong!")
+@bot.tree.command(name="ping", description="Responds with Pong!")
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message("Pong!")
 
