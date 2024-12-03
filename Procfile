@@ -1,1 +1,1 @@
-worker: python Sundaymain.py
+worker: python SundayMain.py
