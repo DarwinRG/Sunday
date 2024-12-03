@@ -454,8 +454,9 @@ async def process_pdf(pdf_data, prompt):
 
 # Slash Commands
 @bot.tree.command(name="ping", description="Responds with Pong!")
-async def ping(interaction: discord.Interaction):
-    await interaction.response.send_message("Pong!")
+@app_commands.describe(things="Pong!")
+async def say(interaction: discord.Interaction, things: str):
+    await interaction.response.send_message(f"Pong! {things}")
 
 
 # ---------------------------------------------Run Bot-------------------------------------------------
