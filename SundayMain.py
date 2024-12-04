@@ -51,6 +51,7 @@ gemini_model = genai.GenerativeModel(
     model_name="gemini-exp-1121",
     generation_config=text_generation_config,
     safety_settings=safety_settings,
+    tools="code_execution",
 )
 
 # Uncomment these if you want to use the system prompt but it's a bit weird
@@ -72,7 +73,7 @@ async def on_ready():
     print("----------------------------------------")
     await bot.change_presence(
         activity=discord.Activity(
-            type=discord.ActivityType.listening, name="your problems"
+            type=discord.ActivityType.listening, name="your prompts"
         )
     )
     await tree.sync()
@@ -88,8 +89,15 @@ async def on_message(message):
     if message.author.bot:
         return
 
-    # Check if the message is in the bot channel or the bot is mentioned
-    if message.channel.id in BOT_CHANNEL_ID or bot.user.mentioned_in(message):
+    # Check if the message is in the bot channel, the bot is mentioned, or in a thread of the bot channel
+    if (
+        message.channel.id in BOT_CHANNEL_ID
+        or bot.user.mentioned_in(message)
+        or (
+            isinstance(message.channel, discord.Thread)
+            and message.channel.parent_id in BOT_CHANNEL_ID
+        )
+    ):
         asyncio.create_task(process_message(message))
 
 
@@ -104,7 +112,14 @@ async def process_message(message):
         return
 
     # Check if the bot is mentioned or the message is in the bot channel
-    if bot.user.mentioned_in(message) or message.channel.id in BOT_CHANNEL_ID:
+    if (
+        bot.user.mentioned_in(message)
+        or message.channel.id in BOT_CHANNEL_ID
+        or (
+            isinstance(message.channel, discord.Thread)
+            and message.channel.parent_id in BOT_CHANNEL_ID
+        )
+    ):
         # Start Typing to seem like something happened
         cleaned_text = clean_discord_message(message.content)
         async with message.channel.typing():
@@ -453,14 +468,17 @@ async def process_pdf(pdf_data, prompt):
 
 
 # Slash Commands
-@bot.tree.command(name='ping', description='Display the latency of the bot!')
+@bot.tree.command(name="ping", description="Display the latency of the bot!")
 async def ping(interaction: discord.Interaction):
-    await interaction.response.send_message(f'Pong! ||{round(bot.latency * 1000)}ms||')
-    
-@bot.tree.command(name='say', description='I\'ll repeat what you want to say!')
-@app_commands.describe(what_to_say='The message you want me to say!')
+    await interaction.response.send_message(f"Pong! ||{round(bot.latency * 1000)}ms||")
+
+
+@bot.tree.command(name="say", description="I'll repeat what you want to say!")
+@app_commands.describe(what_to_say="The message you want me to say!")
 async def say(interaction: discord.Interaction, what_to_say: str):
-    await interaction.response.send_message(f'{what_to_say} - **{interaction.user.display_name}**')
+    await interaction.response.send_message(
+        f"{what_to_say} - **{interaction.user.display_name}**"
+    )
 
 
 # ---------------------------------------------Run Bot-------------------------------------------------
