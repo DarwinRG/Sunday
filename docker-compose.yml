@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  sunday-bot:
+    build: .
+    environment:
+      - GOOGLE_AI_KEY=${GOOGLE_AI_KEY}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+      - MAX_HISTORY=${MAX_HISTORY}
+      - BOT_CHANNEL_ID=${BOT_CHANNEL_ID}
+    volumes:
+      - .:/app
