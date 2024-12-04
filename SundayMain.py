@@ -23,11 +23,11 @@ BOT_CHANNEL_ID = [int(id) for id in os.getenv("BOT_CHANNEL_ID", "").split(",") i
 print(f"Parsed BOT_CHANNEL_ID: {BOT_CHANNEL_ID}")
 
 # Default Summary Prompt if you just shove a URL in
-SUMMERIZE_PROMPT = "Give me 5 bullets about"
+SUMMERIZE_PROMPT = "Summarize this and add at least 5 bullet points:"
 
 message_history = {}
 
-# show_debugs = False
+show_debugs = True
 
 # ---------------------------------------------AI Configuration-------------------------------------------------
 
@@ -478,6 +478,13 @@ async def ping(interaction: discord.Interaction):
 async def say(interaction: discord.Interaction, what_to_say: str):
     await interaction.response.send_message(
         f"{what_to_say} - **{interaction.user.display_name}**"
+    )
+
+
+@bot.tree.command(name="watch", description="Stream movies and TV shows in Paciflix!")
+async def ping(interaction: discord.Interaction):
+    await interaction.response.send_message(
+        "Watch Movies and TV Shows here https://paciflix.darwinrg.tech/ or at our backup site https://paciflix2.darwinrg.tech/"
     )
 
 
