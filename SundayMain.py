@@ -484,7 +484,7 @@ async def say(interaction: discord.Interaction, what_to_say: str):
 @bot.tree.command(name="watch", description="Stream movies and TV shows in Paciflix!")
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message(
-        "Watch Movies and TV Shows here https://paciflix.darwinrg.me/ or at our backup site https://paciflix.darwinrg.tech/"
+        "Watch Movies and TV Shows here https://paciflix.darwinrg.me/"
     )
 
 @bot.tree.command(name="owner", description="Get the owner of the bot!")
