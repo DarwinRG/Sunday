@@ -34,10 +34,10 @@ show_debugs = True
 # Configure the generative AI model
 genai.configure(api_key=GOOGLE_AI_KEY)
 text_generation_config = {
-    "temperature": 0.9,
+    "temperature": 0.6,
     "top_p": 1,
     "top_k": 1,
-    "max_output_tokens": 2048,
+    "max_output_tokens": 20480,
 }
 
 safety_settings = [
