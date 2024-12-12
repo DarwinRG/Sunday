@@ -37,7 +37,7 @@ text_generation_config = {
     "temperature": 0.6,
     "top_p": 1,
     "top_k": 1,
-    "max_output_tokens": 20480,
+    "max_output_tokens": 6144,
 }
 
 safety_settings = [
@@ -47,8 +47,9 @@ safety_settings = [
     {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_ONLY_HIGH"},
 ]
 
+
 gemini_model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash-latest",
+    model_name="gemini-2.0-flash-exp",
     generation_config=text_generation_config,
     safety_settings=safety_settings,
     tools="code_execution",
