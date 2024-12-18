@@ -34,7 +34,7 @@ show_debugs = True
 # Configure the generative AI model
 genai.configure(api_key=GOOGLE_AI_KEY)
 text_generation_config = {
-    "temperature": 0.7,
+    "temperature": 0.8,
     "top_p": 0.9,
     "top_k": 30,
     "max_output_tokens": 6144,
@@ -52,7 +52,6 @@ gemini_model = genai.GenerativeModel(
     model_name="gemini-2.0-flash-exp",
     generation_config=text_generation_config,
     safety_settings=safety_settings,
-    tools="code_execution",
 )
 
 # Uncomment these if you want to use the system prompt but it's a bit weird
