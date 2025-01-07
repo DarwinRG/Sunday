@@ -37,7 +37,7 @@ text_generation_config = {
     "temperature": 0.8,
     "top_p": 0.9,
     "top_k": 30,
-    "max_output_tokens": 6144,
+    "max_output_tokens": 8192,
 }
 
 safety_settings = [
@@ -73,11 +73,16 @@ async def on_ready():
     print("----------------------------------------")
     await bot.change_presence(
         activity=discord.Activity(
-            type=discord.ActivityType.listening, name="your prompts"
+            type=discord.ActivityType.listening, name="your problems 🌞"
         )
     )
     await tree.sync()
 
+    # Send a startup message to all bot channels
+    for channel_id in BOT_CHANNEL_ID:
+        startup_channel = bot.get_channel(channel_id)
+        if startup_channel:
+            await startup_channel.send("Sunday is here! 🌞⚡")
 
 @bot.event
 async def on_message(message):
@@ -487,17 +492,75 @@ async def ping(interaction: discord.Interaction):
         "Watch Movies and TV Shows here https://paciflix.darwinrg.me/"
     )
 
+
 @bot.tree.command(name="owner", description="Get the owner of the bot!")
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message(
         "My father is DarwinRG, view his profile here: https://github.com/DarwinRG"
     )
 
+
 @bot.tree.command(name="code", description="View the code of the bot!")
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message(
         "View the code of the bot here: https://github.com/DarwinRG/Sunday"
     )
+
+
+@bot.tree.command(
+    name="builddeploy",
+    description="Trigger a build and deployment of the app on the server! 🚀",
+)
+async def builddeploy(interaction: discord.Interaction):
+    # Fetch the allowed user IDs from the environment variable
+    ALLOWED_USER_IDS = [
+        int(id) for id in os.getenv("ALLOWED_USER_IDS", "").split(",") if id
+    ]
+    print(f"Allowed User IDs: {ALLOWED_USER_IDS}")
+    print(f"Interaction User ID: {interaction.user.id}")
+
+    # Check if the user is allowed to execute the command
+    if interaction.user.id not in ALLOWED_USER_IDS:
+        await interaction.response.send_message(
+            "You are not authorized to use this command. Please contact the bot owner. 🚫"
+        )
+        return
+
+    heroku_api_key = os.getenv("HEROKU_API_KEY")
+    heroku_app_name = os.getenv("HEROKU_APP_NAME")
+
+    if not heroku_api_key or not heroku_app_name:
+        await interaction.response.send_message(
+            "API key or app name is not configured. Please check the environment variables. 😞"
+        )
+        return
+
+    # Heroku API endpoint to trigger a manual deployment
+    url = f"https://api.heroku.com/apps/{heroku_app_name}/builds"
+    headers = {
+        "Authorization": f"Bearer {heroku_api_key}",
+        "Accept": "application/vnd.heroku+json; version=3",
+        "Content-Type": "application/json",
+    }
+
+    # Trigger a build using the connected GitHub repository
+    payload = {
+        "source_blob": {
+            "url": f"https://api.github.com/repos/{os.getenv('GITHUB_REPO')}/tarball/{os.getenv('GITHUB_BRANCH', 'main')}"
+        }
+    }
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=headers, json=payload) as response:
+            if response.status == 201:
+                await interaction.response.send_message(
+                    "Build and deployment triggered successfully! 🚀"
+                )
+            else:
+                error_message = await response.text()
+                await interaction.response.send_message(
+                    f"Failed to trigger build and deployment. Status: {response.status}, Error: {error_message} 😞"
+                )
 
 
 # ---------------------------------------------Run Bot-------------------------------------------------
