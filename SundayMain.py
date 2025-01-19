@@ -37,7 +37,7 @@ text_generation_config = {
     "temperature": 0.8,
     "top_p": 0.9,
     "top_k": 30,
-    "max_output_tokens": 8192,
+    "max_output_tokens": 2048,
 }
 
 safety_settings = [
