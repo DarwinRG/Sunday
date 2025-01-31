@@ -48,15 +48,17 @@ safety_settings = [
 ]
 
 
+# Define the persona for the bot
+gemini_system_prompt = "You are Sunday, an AI assistant created by DarwinRG. Your primary goal is to assist users by providing accurate and concise answers to their questions. Always be friendly, professional, and clear in your responses. Ensure your answers are easy to understand, helpful, and concise."
+
+# Initialize the generative AI model with the persona
 gemini_model = genai.GenerativeModel(
     model_name="gemini-2.0-flash-exp",
     generation_config=text_generation_config,
     safety_settings=safety_settings,
+    system_instruction=gemini_system_prompt,
 )
 
-# Uncomment these if you want to use the system prompt but it's a bit weird
-# gemini_system_prompt = ""
-# gemini_model = genai.GenerativeModel(model_name="gemini-1.5-flash", generation_config=text_generation_config, safety_settings=safety_settings,system_instruction=gemini_system_prompt)
 
 # ---------------------------------------------Discord Code-------------------------------------------------
 # Initialize Discord bot
@@ -83,6 +85,7 @@ async def on_ready():
         startup_channel = bot.get_channel(channel_id)
         if startup_channel:
             await startup_channel.send("Sunday is here! 🌞⚡")
+
 
 @bot.event
 async def on_message(message):
