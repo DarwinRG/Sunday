@@ -23,7 +23,7 @@ BOT_CHANNEL_ID = [int(id) for id in os.getenv("BOT_CHANNEL_ID", "").split(",") i
 print(f"Parsed BOT_CHANNEL_ID: {BOT_CHANNEL_ID}")
 
 # Default Summary Prompt if you just shove a URL in
-SUMMERIZE_PROMPT = "Summarize this and add at least 5 bullet points:"
+SUMMERIZE_PROMPT = "Summarize this and add at least 3 bullet points:"
 
 message_history = {}
 
